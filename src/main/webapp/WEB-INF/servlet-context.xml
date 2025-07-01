@@ -31,4 +31,7 @@
 
     </context:component-scan>
 
+    <!--LocalDate 타입을 문자열로 변환해주는 클래스(기능)을 미리 등록해놓기-->
+
+
 </beans>
