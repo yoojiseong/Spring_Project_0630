@@ -1,4 +1,4 @@
-package sample.mapper;
+package mapper;
 
 import com.busanit501.spring_project.mapper.TimeMapper;
 import com.busanit501.spring_project.mapper.TimeMapper2;
