@@ -23,6 +23,7 @@ http://localhost:8080/resources/test.html-->
     <div class="row">
         <!--        <h1>Header</h1>-->
         <!--        네비게이션바 추가 시작-->
+        <!--        네비게이션바 추가 시작-->
         <div class="row">
             <div class="col">
                 <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -36,10 +37,10 @@ http://localhost:8080/resources/test.html-->
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                    <a class="nav-link active" aria-current="page" href="/todo/list">목록가기</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Features</a>
+                                    <a class="nav-link" href="/todo/register">글쓰기</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Pricing</a>

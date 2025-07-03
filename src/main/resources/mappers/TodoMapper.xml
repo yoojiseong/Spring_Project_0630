@@ -23,10 +23,19 @@
     <select id="selectByTno" resultType="com.busanit501.spring_project.domain.TodoVO">
         select * from tbl_todo where tno=#{tno}
     </select>
-    <update id="updateByTno" parameterType="com.busanit501.spring_project.domain.TodoVO">
-        update tbl_todo set title=#{title},dueDate=#{dueDate},writer=#{writer} where tno=#{tno}
+    <update id="modify" parameterType="com.busanit501.spring_project.domain.TodoVO">
+        update tbl_todo set title=#{title},dueDate=#{dueDate},writer=#{writer}, finished = #{finished} where tno=#{tno}
     </update>
-    <delete id="deleteByTno" parameterType="com.busanit501.spring_project.domain.TodoVO">
+    <delete id="delete" >
         delete from tbl_todo where tno=#{tno}
     </delete>
+<!--    PageRequestDTO에서 getSkip이라는 메서드가 있는데-->
+<!--    Mybatis가 기본적으로 "getXXX"형식으로 처리된 메서드는 #{skip}으로 처리된다-->
+    <select id="selectList">
+        select * from tbl_todo order by tno desc limit #{skip},#{size}
+    </select>
+
+    <select id="getCount">
+        select count(tno) from tbl_todo
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.busanit501.spring_project.mapper;
 
 import com.busanit501.spring_project.domain.TodoVO;
+import com.busanit501.spring_project.dto.PageRequestDTO;
 
 import java.util.List;
 
@@ -17,7 +18,12 @@ public interface TodoMapper {
     //하나 조회, 상세보기
     TodoVO selectByTno(Long tno);
 
-    void updateByTno(TodoVO todoVO);
+    void modify(TodoVO todoVO);
 
-    void deleteByTno(Long tno);
+    void delete(Long tno);
+
+    List<TodoVO> selectList(PageRequestDTO pageRequestDTO);
+
+    //페이징 준비물 2 전체 갯수 파악
+    int getCount(PageRequestDTO pageRequestDTO);
 }

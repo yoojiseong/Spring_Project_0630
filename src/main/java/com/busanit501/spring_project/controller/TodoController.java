@@ -1,5 +1,6 @@
 package com.busanit501.spring_project.controller;
 
+import com.busanit501.spring_project.dto.PageRequestDTO;
 import com.busanit501.spring_project.dto.TodoDTO;
 import com.busanit501.spring_project.service.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -31,12 +32,26 @@ public class TodoController {
     // void 라고하면, 메서드 명 : list
     // /WEB-INF/views/todo/list.jsp , 가리킴.
     // 자동 연결, 뷰 리졸버라는 친구의 업무.
-    public void list2(Model model){
+    // 웹 화면에서 url : http://localhost:8080/todo/list?page=20&size=10
+    // page,size정보를 자동 형변환 해준다.
+    public void list2(@Valid PageRequestDTO pageRequestDTO,
+                      BindingResult bindingResult,
+                      Model model){
         log.info("TodoController에서 작업, list 호출 ");
-        List<TodoDTO> dtoList = todoService.getAll();
-        dtoList.forEach(vo -> log.info(vo));
-        // 서비스로 부터 외주 맡겨서, 디비 정보를 받아와서, 화면에 전달, 탑재하기.
-        model.addAttribute("dtoList", todoService.getAll());
+
+        //페이징 전
+//        List<TodoDTO> dtoList = todoService.getAll();
+//        dtoList.forEach(vo -> log.info(vo));
+//        // 서비스로 부터 외주 맡겨서, 디비 정보를 받아와서, 화면에 전달, 탑재하기.
+//        model.addAttribute("dtoList", todoService.getAll());
+
+        //페이징 후
+        // 유효성 체크.
+        if(bindingResult.hasErrors()){
+            // size 최소 10, 최대 100 요청1000, 잘못된 요청 -> 기본으로 10으로 변경하기
+            pageRequestDTO = PageRequestDTO.builder().build();
+        }
+        model.addAttribute("responseDTO", todoService.getList(pageRequestDTO));
     }
 
     // 최종 url : /todo/register
@@ -78,13 +93,42 @@ public class TodoController {
         return "redirect:/todo/list";
     }
 
-    @GetMapping("/read")
+    @GetMapping({"/read","/modify"})
     public void read(Long tno, Model model){
         TodoDTO todoDTO = todoService.selectByTno(tno);
         log.info(todoDTO);
         model.addAttribute("dto", todoDTO);
 
 
+    }
+
+    @PostMapping("/remove")
+    public String remove(Long tno, RedirectAttributes redirectAttributes){
+        log.info("삭제 작업 중..");
+        log.info("tno : "+tno);
+        todoService.remove(tno);
+        return "redirect:/todo/list";
+    }
+
+    @PostMapping("/modify")
+    public String modify(@Valid TodoDTO todoDTO,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()){
+            log.info("수정 적용 부분에서, 유효성 통과 못했음");
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+            // 현재 수정 화면에서, 수정할 내용을 입력 후, 유효성 체크 통과를 못했다면,
+            // 다시 수정 화면으로 이동해야함,
+            // 이떄 어떤 tno에서 작업하는지 알려줘야함
+            // 이렇게 되면 쿼리 스트림으로 ?tno=21, 이렇게 화면에 전달 됨
+            redirectAttributes.addAttribute("tno", todoDTO.getTno());
+            // 최종 rul : /todo/modify?tno=21
+            return "redirect:/todo/modify";
+        }
+        log.info("수정 로직 처리 post 작업중 넘어온 데이터 확인 : "+ todoDTO);
+        todoService.modify(todoDTO);
+        //PRG 패턴,
+        return "redirect:/todo/list";
     }
 
 }

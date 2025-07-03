@@ -1,6 +1,7 @@
 package mapper;
 
 import com.busanit501.spring_project.domain.TodoVO;
+import com.busanit501.spring_project.dto.PageRequestDTO;
 import com.busanit501.spring_project.mapper.TodoMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ public class TodoMapperTests {
                 .dueDate(LocalDate.now())
                 .writer("유지성 업데이트")
                 .build();
-        todoMapper.updateByTno(todoVO);
+        todoMapper.modify(todoVO);
         TodoVO todoVO2 = todoMapper.selectByTno(7L);
         log.info(todoVO2);
     }
@@ -65,6 +66,28 @@ public class TodoMapperTests {
     public void testDelete(){
         TodoVO todoVO = todoMapper.selectByTno(3L);
         log.info("당신이 고른 tno 정보" +todoVO);
-        todoMapper.deleteByTno(3L);
+        todoMapper.delete(3L);
+    }
+
+    //페이징 처리가 된 전체 리스트
+    @Test
+    public void testSelectListwithPage() {
+        // 준비물, 화면에서 전달받은 페이징 정보가 필요함
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(2) //확인시 페이지 번호만 변경하면 됨
+                .size(10)
+                .build();
+        List<TodoVO> todoVOList = todoMapper.selectList(pageRequestDTO);
+        todoVOList.forEach(vo -> log.info(vo));
+    }
+
+    @Test
+    public void testSelectCount(){
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(2) //확인시 페이지 번호만 변경하면 됨
+                .size(10)
+                .build();
+        int total = todoMapper.getCount(pageRequestDTO);
+        log.info("전체 갯수 : "+total);
     }
 }
